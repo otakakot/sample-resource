@@ -1,0 +1,21 @@
+name: trigger
+run-name: ${{ github.workflow }} (${{ github.ref_name }} by ${{ github.actor }})
+concurrency: ${{ github.workflow }}-${{ github.ref_name }}
+on:
+  repository_dispatch:
+    types:
+      - ref
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    permissions:
+        contents: write
+    env:
+        GITHUB_REF: ${{ github.event.client_payload.ref }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Push Release Tag
+        run: |
+          git tag ${{ env.GITHUB_REF }}
+          git push origin ${{ env.GITHUB_REF }}
