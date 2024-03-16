@@ -1,4 +1,4 @@
-name: trigger
+name: create tag
 run-name: ${{ github.workflow }} (${{ github.ref_name }} by ${{ github.actor }})
 concurrency: ${{ github.workflow }}-${{ github.ref_name }}
 on:
@@ -8,13 +8,19 @@ on:
 jobs:
   dispatch:
     runs-on: ubuntu-latest
-    permissions:
-        contents: write
     env:
         GITHUB_REF: ${{ github.event.client_payload.ref }}
     steps:
+      - name: Generate token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.BOT_GITHUB_APP_ID }}
+          private-key: ${{ secrets.BOT_GITHUB_APP_PRIVATE_KEY }}
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
       - name: Push Release Tag
         run: |
           git tag ${{ env.GITHUB_REF }}
