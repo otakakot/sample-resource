@@ -21,6 +21,15 @@ jobs:
           owner: otakakot
           repositories: sample-manifest
       - name: Repository Dispatch
+        if: ${{ !startsWith(github.ref_name, 'pre-release-') && !startsWith(github.ref_name, 'release-') }}
+        uses: otakakot/repository-dispatch@v1.0.0
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          repository: otakakot/sample-manifest
+          event-type: ref
+          client-payload: '{"ref": "${{ github.sha }}"}'
+      - name: Repository Dispatch
+        if: ${{ startsWith(github.ref_name, 'pre-release-') || startsWith(github.ref_name, 'release-') }}
         uses: otakakot/repository-dispatch@v1.0.0
         with:
           token: ${{ steps.generate-token.outputs.token }}
