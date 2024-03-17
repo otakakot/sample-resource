@@ -20,7 +20,7 @@ jobs:
           private-key: ${{ secrets.BOT_GITHUB_APP_PRIVATE_KEY }}
           owner: otakakot
           repositories: sample-manifest
-      - name: Repository Dispatch
+      - name: Repository Dispatch (Develop)
         if: ${{ !startsWith(github.ref_name, 'pre-release-') && !startsWith(github.ref_name, 'release-') }}
         uses: otakakot/repository-dispatch@v1.0.0
         with:
@@ -28,7 +28,7 @@ jobs:
           repository: otakakot/sample-manifest
           event-type: ref
           client-payload: '{"ref": "${{ github.sha }}"}'
-      - name: Repository Dispatch
+      - name: Repository Dispatch (Staging And Production)
         if: ${{ startsWith(github.ref_name, 'pre-release-') || startsWith(github.ref_name, 'release-') }}
         uses: otakakot/repository-dispatch@v1.0.0
         with:
