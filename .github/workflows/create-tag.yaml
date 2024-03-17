@@ -6,7 +6,7 @@ on:
     types:
       - ref
 jobs:
-  dispatch:
+  create-tag:
     runs-on: ubuntu-latest
     env:
         GITHUB_REF: ${{ github.event.client_payload.ref }}
